@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redunited_store/widgets/left_drawer.dart';
-import 'package:redunited_store/screens/newlist_form.dart';
+import 'package:redunited_store/screens/productlist_form.dart';
 import 'package:redunited_store/widgets/product_card.dart';
 
 class MyHomePage extends StatelessWidget {
