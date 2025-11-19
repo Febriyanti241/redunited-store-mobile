@@ -11,80 +11,134 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "A"; //kelas
 
   final List<ItemHomepage> items = [
-    ItemHomepage("All Product", Icons.newspaper, Colors.blue),
-    ItemHomepage("My Product", Icons.newspaper, Colors.green),
-    ItemHomepage("Create Product", Icons.add, Colors.red),
+    ItemHomepage("All Product", Icons.inventory_2, const Color(0xFF8B0000)),
+    ItemHomepage("My Product", Icons.person_pin, const Color(0xFF006400)),
+    ItemHomepage("Create Product", Icons.add_circle, const Color(0xFFDA291C)),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold menyediakan struktur dasar halaman dengan AppBar dan body.
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        // Judul aplikasi "RedUnited Store" dengan teks putih dan tebal.
-        
         title: const Text(
           'RedUnited Store',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 22,
+            letterSpacing: 0.5,
           ),
         ),
-        // Warna latar belakang AppBar diambil dari skema warna tema aplikasi.
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color(0xFF8B0000),
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
       ),
-      drawer: LeftDrawer(),
-
-      // Gunakan SafeArea supaya tidak tertutup status bar / notch.
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          // Menyusun widget secara vertikal dalam sebuah kolom.
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Row untuk menampilkan 3 InfoCard secara horizontal.
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      drawer: const LeftDrawer(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header Section with Gradient
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF8B0000),
+                    Color(0xFFDA291C),
+                  ],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                child: Column(
+                  children: [
+                    // Info Cards
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InfoCard(title: 'NPM', content: npm),
+                        InfoCard(title: 'Name', content: nama),
+                        InfoCard(title: 'Class', content: kelas),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    // Welcome Text
+                    const Column(
+                      children: [
+                        Text(
+                          'Selamat datang di',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'RedUnited Store',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
+                            color: Colors.white,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '⚽ Official Manchester United Merchandise',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFFFFD700),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 30),
+            
+            // Grid Menu
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InfoCard(title: 'NPM', content: npm),
-                  InfoCard(title: 'Name', content: nama),
-                  InfoCard(title: 'Class', content: kelas),
+                  const Text(
+                    'Quick Menu',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 1,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 3,
+                    children: items.map((ItemHomepage item) {
+                      return ItemCard(item);
+                    }).toList(),
+                  ),
                 ],
               ),
-
-              // Memberikan jarak vertikal 16 unit.
-              const SizedBox(height: 16.0),
-
-              // Teks sambutan
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: Text(
-                  'Selamat datang di RedUnited Store',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12.0),
-
-              // Expanded agar GridView mengambil ruang sisa dan bisa menggulir sendiri.
-              Expanded(
-                child: GridView.count(
-                  // Jangan pakai primary: true atau shrinkWrap: true di sini.
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: items.map((ItemHomepage item) {
-                    return ItemCard(item);
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );
@@ -92,30 +146,48 @@ class MyHomePage extends StatelessWidget {
 }
 
 class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan title dan content.
-  final String title; // Judul kartu.
-  final String content; // Isi kartu.
+  final String title;
+  final String content;
 
   const InfoCard({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // Membuat kotak kartu dengan bayangan dibawahnya.
-      elevation: 2.0,
+    return Expanded(
       child: Container(
-        // Mengatur ukuran dan jarak di dalam kartu.
-        width: MediaQuery.of(context).size.width / 3.5, // menyesuaikan dengan lebar device yang digunakan.
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun title dan content secara vertikal.
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Color(0xFF8B0000),
+              ),
             ),
-            const SizedBox(height: 8.0),
-            Text(content),
+            const SizedBox(height: 6),
+            Text(
+              content,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ],
         ),
       ),

@@ -6,16 +6,17 @@ import 'package:redunited_store/widgets/product_entry_card.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
-class ProductEntryListPage extends StatefulWidget {
-  const ProductEntryListPage({super.key});
+class MyProductListPage extends StatefulWidget {
+  const MyProductListPage({super.key});
 
   @override
-  State<ProductEntryListPage> createState() => _ProductEntryListPageState();
+  State<MyProductListPage> createState() => _MyProductListPageState();
 }
 
-class _ProductEntryListPageState extends State<ProductEntryListPage> {
-  Future<List<ProductEntry>> fetchProduct(CookieRequest request) async {
-    final response = await request.get('http://localhost:8000/json/');
+class _MyProductListPageState extends State<MyProductListPage> {
+  Future<List<ProductEntry>> fetchMyProduct(CookieRequest request) async {
+    // Update URL dengan /auth/ prefix
+    final response = await request.get('http://localhost:8000/auth/json/my-products/');
     var data = response;
     
     List<ProductEntry> listProduct = [];
@@ -34,13 +35,13 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
-          'All Products',
+          'My Products',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xFF8B0000), // Manchester United maroon
+        backgroundColor: const Color(0xFF006400), // Dark green
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const LeftDrawer(),
@@ -50,7 +51,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: Color(0xFF8B0000),
+              color: Color(0xFF006400), // Dark green
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
@@ -68,15 +69,15 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFD700), // Gold
+                        color: const Color(0xFF90EE90), // Light green
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
-                        'All Product',
+                        'My Product',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF8B0000),
+                          color: Color(0xFF006400),
                         ),
                       ),
                     ),
@@ -84,7 +85,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Browse All Products',
+                  'Your Products',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -93,7 +94,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Discover Manchester United official merchandise',
+                  'Manage your product listings',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.white70,
@@ -106,7 +107,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
           // Product List
           Expanded(
             child: FutureBuilder(
-              future: fetchProduct(request),
+              future: fetchMyProduct(request),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -120,6 +121,12 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                         Text(
                           'Error: ${snapshot.error}',
                           style: const TextStyle(fontSize: 16, color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Please try logging in again',
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -135,7 +142,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No products available yet.',
+                          'You haven\'t created any products yet.',
                           style: TextStyle(
                             fontSize: 18, 
                             color: Colors.grey[600],
@@ -144,7 +151,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Be the first to add a product!',
+                          'Start by creating your first product!',
                           style: TextStyle(
                             fontSize: 14, 
                             color: Colors.grey[500],
